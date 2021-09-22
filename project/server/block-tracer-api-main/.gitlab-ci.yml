@@ -1,0 +1,47 @@
+build:
+  image: docker:18.09.7
+  stage: build
+  only:
+    - main
+  services:
+    - docker:18.09.7-dind
+  variables:
+    VERSION: "1.0"
+    CONTAINER_RELEASE_IMAGE: "tanakorn0412/block-tracer-api"
+  script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker build --pull -t $CI_REGISTRY_IMAGE:$VERSION -t $CI_REGISTRY_IMAGE:latest .
+    - docker push $CI_REGISTRY_IMAGE
+
+deploy:
+  image: debian:buster-slim
+  before_script:
+    ## Setup Environment variables CI/CD on gitlab project.
+    ## SSH_PRIVATE_KEY = xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    ## SSH_USERNAME = root
+    ## SSH_HOSTNAME = 192.168.1.xxx
+    ## PROJECT_DOCKER_PATH: "/home/sms/workspace"
+    - apt-get update -qq
+    - apt-get install -qq git curl
+    # Setup SSH deploy keys
+    - 'which ssh-agent || ( apt-get install -qq openssh-client )'
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo "$SSH_PRIVATE_KEY")
+    - mkdir -p ~/.ssh
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+  stage: deploy
+  only:
+    - main
+  script:
+    - ssh $SSH_USERNAME@$SSH_HOSTNAME "[ -d $PROJECT_DOCKER_PATH ] && echo 'Directory Exists' || mkdir -p $PROJECT_DOCKER_PATH && exit"
+
+    - scp docker-compose-server.yml $SSH_USERNAME@$SSH_HOSTNAME:$PROJECT_DOCKER_PATH/docker-compose.yml
+
+    - ssh $SSH_USERNAME@$SSH_HOSTNAME "docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY"
+
+    - ssh $SSH_USERNAME@$SSH_HOSTNAME "cd $PROJECT_DOCKER_PATH
+          && docker-compose pull && docker-compose down && docker-compose up -d --build && docker image prune --force
+          && exit"
+
+  after_script:
+    - echo ${CI_BUILD_ID}/${CI_BUILD_STATUS}

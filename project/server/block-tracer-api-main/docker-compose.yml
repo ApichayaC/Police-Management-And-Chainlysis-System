@@ -1,0 +1,10 @@
+version: '3.3'
+
+services:
+    block-tracer-api:
+        container_name: block-tracer-api
+        build: .
+        ports:
+            - "4005:4000"
+        env_file:
+            - .env

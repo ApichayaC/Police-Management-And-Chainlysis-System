@@ -1,0 +1,19 @@
+version: '3.3'
+
+services:
+    block-tracer-api:
+        container_name: block-tracer-api
+        image: registry.gitlab.com/tanakorn0412/block-tracer-api:latest
+        ports:
+            - "4005:4000"
+        env_file:
+            - .env
+        networks:
+            - postgres_default
+            - neo4j_default
+
+networks:
+    postgres_default:
+        external: true
+    neo4j_default:
+        external: true

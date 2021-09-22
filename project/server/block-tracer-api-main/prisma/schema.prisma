@@ -1,0 +1,39 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Transaction {
+  hash        String   @id
+  blockNumber Int
+  from        String
+  to          String
+  input       String
+  value       String
+  token       String
+  amount      Float
+  timeStamp   Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model DataSnapshot {
+  sender          String  @id @unique
+  startBlock      Int     @default(0)
+  endBlock        Int     @default(0)
+  loadedPages     Int     @default(0)
+  isCompleted     Boolean @default(false)
+  latestSyncBlock Int     @default(0)
+}
+
+model PutGrahpSnapshot {
+  index     Int      @id @default(0)
+  createdAt DateTime @default(now())
+}
