@@ -5,18 +5,18 @@ import info_police from '../pages'
 
 export default function Home() {
     return (
-        <div style={{ backgroundColor: '#EAEAEA', display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', padding: '0 0.5rem' }}>
+        <div style={{ backgroundColor: '#EAEAEA', display: 'flex', position:'relative',justifyContent: 'center', alignItems: 'center', padding: '0 0.5rem', height: '100vh',width:'100vw' }}>
             <div className={styles.box}>
                 <button className={styles.button} style={{ marginLeft: '75px', marginTop: '90px' }}>
-                    <a href="/police_list" className={styles.fonthome}>หน้าแรก</a>
+                    <a href="/police_list" className={styles.fonthome} style={{margin:'-14px 50px 0px 65px'}}>หน้าแรก</a>
                 </button>
 
                 <button className={styles.button} style={{ marginLeft: '75px', marginTop: '50px' }}>
-                    <a href="/police_list" className={styles.fonthome}>ข้อมูลตำรวจ</a>
+                <a href="/police_list" className={styles.fonthome} style={{margin:'-14px 50px 0px 45px'}}>ข้อมูลตำรวจ</a>
                 </button>
 
                 <button className={styles.button} style={{ marginLeft: '75px', marginTop: '50px' }}>
-                    <a href="/block_tracer" className={styles.fonthome}>Block Tracer</a>
+                <a href="/block_tracer" className={styles.fonthome} style={{margin:'-14px 50px 0px 45px'}}>Block Tracer</a>
                 </button>
             </div>
         </div>

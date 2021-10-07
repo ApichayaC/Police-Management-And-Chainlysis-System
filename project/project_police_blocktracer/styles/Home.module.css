@@ -120,7 +120,6 @@
   background: #4E98B8;
   box-shadow: 7px 10px 10px rgba(0, 0, 0, 0.25);
   border-radius: 80px;
-
 }
 
 .button {
@@ -133,15 +132,64 @@
 
 .fonthome {
   position: absolute;
-  height: 28px;
+  /* height: 28px; */
   font-style: normal;
   font-weight: normal;
   font-size: 24px;
   line-height: 28px;
-  display:flex;
+  display: flex;
   align-items: center;
   text-align: center;
   color: #696969;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 }
 
+.tapbar {
+  /* position: absolute; */
+  /* width: 100vw; */
+  height: 90px;
+  /* left: 38px; */
+  /* top: 39px; */
+  background: #4E98B8;
+  box-shadow: 8px 10px 6px rgba(0, 0, 0, 0.25);
+  border-radius: 20px;
+}
+
+.box_info {
+  /* position: absolute; */
+  /* width: 100vw; */
+  /* left: 38px; */
+  /* top: 171px; */
+  background: #E4F8FF;
+  box-shadow: 8px 10px 6px rgba(0, 0, 0, 0.25);
+  border-radius: 20px;
+}
+
+.font_top {
+  /* position: absolute; */
+  font-style: normal;
+  font-weight: normal;
+  font-size: 40px;
+  line-height: 85px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: #FFFFFF;
+  margin: 5px 50px 0px 50px;
+}
+
+.table {
+  /* position: absolute; */
+  display: flex;
+  justify-content: center;
+  padding: auto;
+  /* padding-left: 140px; */
+}
+
+.from {
+  position: absolute;
+  width: 279px;
+  height: 33px;
+  left: 218px;
+  top: 217px;
+}

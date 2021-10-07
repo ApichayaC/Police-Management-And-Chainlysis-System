@@ -1,0 +1,1 @@
+scp -i ~/.ssh/id_ed25519 -r ./build/* root@tanakorn-karode.tk:/var/www/block-tracer.tanakorn-karode.tk/html
