@@ -54,15 +54,15 @@ class PoliceController {
         police.rank = body.rank ;
         police.name = body.name ;
         police.surname = body.surname ;
-        // police.position = body.position ;
+        police.position = body.position ;
         // police.dob = body.dob ;
-        // police.education = body.education ;
-        // police.training = body.training ;
+        police.education = body.education ;
+        police.training = body.training ;
         // police.civil_history = body.civil_history ;
         // police.civil_year = body.civil_year ;
-        // police.reward = body.reward ;
-        // police.appoint = body.appoint ;
-        // police.telephone = body.telephone ;
+        police.reward = body.reward ;
+        police.appoint = body.appoint ;
+        police.telephone = body.telephone ;
         await police.save()
         return response.send("PASS!!")
     }
