@@ -17,8 +17,8 @@ export default function List() {
         let lists = await axios.get(URL + '/shows');
         console.log(lists)
         lists.data = lists.data.sort((a: any, b: any) => a.id - b.id);
-        const newList = lists.data.length > 0 &&  lists.data.map((item: any,index:number)=>{
-           return {...item, index: index+1} 
+        const newList = lists.data.length > 0 && lists.data.map((item: any, index: number) => {
+            return { ...item, index: index + 1 }
         })
         setList(newList);
         setName(newList);
@@ -26,7 +26,16 @@ export default function List() {
 
     }
     useEffect(() => {
-        getName()
+        const storage = localStorage.getItem('user')
+        if (storage == 'success') {
+            getName()
+        }
+        else {
+            router.push({
+                pathname: 'login'
+            })
+        }
+
     }, []);
 
     // const searchName = async (
@@ -46,14 +55,14 @@ export default function List() {
     // }
     const searchName = async () => {
         let i = 0
-        let person = list.length > 0 && list.filter((item: any,index : number) => {
+        let person = list.length > 0 && list.filter((item: any, index: number) => {
             if (item.name.indexOf(search) != -1) {
                 return item
             }
-        })||[];
-        person = person.map((item: any)=> {
+        }) || [];
+        person = person.map((item: any) => {
             i++
-            return {...item,index:i}
+            return { ...item, index: i }
         })
         console.log('person', person);
         setName(person || []);
@@ -101,33 +110,45 @@ export default function List() {
 
 
     return (
-        <div style={{ justifyContent: 'center', alignItems: 'center', padding: '2rem 2rem', width: '100vw' }}>
-            <div className={styles.tapbar}>
-                <p className={styles.font_top}>INFORMATION</p>
+        <div style={{backgroundColor: '#EAEAEA'}}>
+            <div>
+                <a onClick={() => {
+                    localStorage.removeItem('user')
+                    router.push({
+                        pathname: 'home'
+                    })
+                }}
+                    style={{ float: 'right', margin: '10px', cursor: 'pointer',paddingRight:'2rem'  }}>ออกจากระบบ</a>
             </div>
-            <div className={styles.box_info}>
-
-                <div style={{ justifyContent: 'center', textAlign: 'center', margin: '30px' }}>
-                    <h1 style={{ fontSize: '32px' }}>ค้นหารายชื่อ</h1>
-                    <Input type='text' style={{ width: 300 }} onChange={e => { setSearch(e.target.value.trim()); searchName() }} />
-                    <Button onClick={searchName}>Search</Button>
+            <div style={{ justifyContent: 'center', alignItems: 'center', padding: '2rem 2rem', width: '100vw' }}>
+                <div className={styles.tapbar}>
+                    <p className={styles.font_top}>INFORMATION</p>
                 </div>
-                <div className={styles.table}>
-                    <Table
-                        style={{ width: '90%' }}
-                        dataSource={name}
-                        columns={columns}
-                    />
-                </div>
-                <div style={{ justifyContent:'center', textAlign:'left', padding: '0px 20px 30px 70px' }}>
-                    <Button
-                        href='/home'>
-                        Back
-                    </Button>
-                </div>
+                <div className={styles.box_info}>
+
+                    <div style={{ justifyContent: 'center', textAlign: 'center', margin: '30px' }}>
+                        <h1 style={{ fontSize: '32px' }}>ค้นหารายชื่อ</h1>
+                        <Input type='text' style={{ width: 300 }} onChange={e => { setSearch(e.target.value.trim()); searchName() }} />
+                        <Button onClick={searchName}>Search</Button>
+                    </div>
+                    <div className={styles.table}>
+                        <Table
+                            style={{ width: '90%' }}
+                            dataSource={name}
+                            columns={columns}
+                        />
+                    </div>
+                    <div style={{ justifyContent: 'center', textAlign: 'left', padding: '0px 20px 30px 70px' }}>
+                        <Button
+                            href='/home'>
+                            Back
+                        </Button>
+                    </div>
 
 
+                </div>
             </div>
         </div>
+
     )
 }

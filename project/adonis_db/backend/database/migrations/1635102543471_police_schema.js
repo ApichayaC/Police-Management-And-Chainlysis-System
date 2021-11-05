@@ -1,4 +1,5 @@
 'use strict'
+
 /** @type {import('@adonisjs/lucid/src/Schema')} */
 const Schema = use('Schema')
 
@@ -18,11 +19,16 @@ class PoliceSchema extends Schema {
       table.string('reward')
       table.string('appoint')
       table.string('telephone')
+
+      table.string('idCard')
+      table.string('idPosition')
       table.timestamps()
     })
   }
+
   down () {
     this.drop('police')
   }
 }
+
 module.exports = PoliceSchema

@@ -40,6 +40,9 @@ class ImportController {
                     newPolice.reward = explanation.getCell('CA' + rowNumber).value;
                     newPolice.appoint = explanation.getCell('CB' + rowNumber).value;
 
+                    newPolice.idCard = explanation.getCell('F'+rowNumber).value;
+                    newPolice.idPosition = explanation.getCell('AQ'+rowNumber).value;
+
 
                     await newPolice.save();
                 } catch (error) {

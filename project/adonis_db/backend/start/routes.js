@@ -24,4 +24,6 @@ Route.get('get/:id','PoliceController.getID')
 Route.put('update/:id','PoliceController.update')
 Route.delete('delete/:id','PoliceController.delete')
 
+Route.post('login','PoliceController.login')
+
 Route.post('import','ImportController.import')

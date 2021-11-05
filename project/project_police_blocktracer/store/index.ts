@@ -11,7 +11,7 @@ let initialLabels: Record<string, string> = {};
 THEIF_ADDRESSES.ETH.forEach((address, index) => initialLabels[address] = `Theif ${index + 1}`);
 BN_ADDRESSES.forEach((address, index) => initialLabels[address] = `Binance ${index + 1}`);
 
-// let localLabels = localStorage.getItem(LOCAL_KEYS.LABELS) || 'LABELS';
+// let localLabels = localStorage.getItem(LOCAL_KEYS.LABELS);
 // if (localLabels) {
 //     try {
 //         const jsonLabels = JSON.parse(localLabels);

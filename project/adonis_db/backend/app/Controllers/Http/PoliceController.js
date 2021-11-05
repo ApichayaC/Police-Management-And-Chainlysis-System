@@ -40,6 +40,9 @@ class PoliceController {
         newPolice.appoint = body.appoint ;
         newPolice.telephone = body.telephone ;
 
+        newPolice.idCard = body.idCard ;
+        newPolice.idPosition = body.idPosition ;
+
         await newPolice.save();
         return response.send("PASS");
       }
@@ -51,15 +54,15 @@ class PoliceController {
         police.rank = body.rank ;
         police.name = body.name ;
         police.surname = body.surname ;
-        police.position = body.position ;
-        police.dob = body.dob ;
-        police.education = body.education ;
-        police.training = body.training ;
-        police.civil_history = body.civil_history ;
-        police.civil_year = body.civil_year ;
-        police.reward = body.reward ;
-        police.appoint = body.appoint ;
-        police.telephone = body.telephone ;
+        // police.position = body.position ;
+        // police.dob = body.dob ;
+        // police.education = body.education ;
+        // police.training = body.training ;
+        // police.civil_history = body.civil_history ;
+        // police.civil_year = body.civil_year ;
+        // police.reward = body.reward ;
+        // police.appoint = body.appoint ;
+        // police.telephone = body.telephone ;
         await police.save()
         return response.send("PASS!!")
     }
@@ -69,6 +72,31 @@ class PoliceController {
         const police = await Police.find(params.id);
         await police.delete() ;
         return response.send("OK, Delete PASS!!")
+    }
+
+    //login
+    async login ({request,response}){
+        const polices = await Database.table("police").select("*") ;
+        const body = request.all() ;
+        //console.log(polices);
+        const user = polices.find((value)=>{
+            if(value.idPosition.trim()==body.username.trim()&&value.idCard.trim()==body.password.trim()){
+                return value
+            }
+        })
+        console.log(user)
+        if(user){
+            response.send({
+                message : 'OK',
+                status : true
+            })
+        }
+        else{
+            response.send({
+                message : 'Do not value',
+                status : false
+            })
+        }
     }
 }
 
