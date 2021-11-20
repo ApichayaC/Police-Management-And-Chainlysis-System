@@ -8,10 +8,12 @@ import * as am4core from '@amcharts/amcharts4/core'
 import * as am4charts from '@amcharts/amcharts4/charts'
 import * as am4plugins_forceDirected from '@amcharts/amcharts4/plugins/forceDirected'
 
-import { GraphInput } from '../src/types'
+import { Edge, GraphInput } from '../src/types'
 import { THEIF_ADDRESSES, BN_ADDRESSES } from '../src/common/constants'
 import axios from 'axios'
 import config from '../config'
+import { values } from 'core-js/core/array';
+
 
 const BASE_URL = 'http://block.werapun.com:4005';
 const PAGE_SIZE = 5;
@@ -24,20 +26,46 @@ const Block_Tracer = () => {
     const [page, setPage] = useState('1');
     const [loading, setLoading] = useState(false);
 
+    const [amount, setAmount] = useState()
+
     const [relations, setRelations] = useState<GraphInput>();
     const [visible, setVisible] = useState(false);
     const [selectedNode, setSelectedNode] = useState<any>(null);
 
     const router = useRouter();
 
-    const getAccountRelations = (from: string, to: string, level = 1, limit = 20, offset = 0) => {
+    const getAccountRelations = async (from: string, to: string, level = 1, limit = 20, offset = 0) => {
         const url = `${BASE_URL}/graph/trace?from=${from}&to=${to}&level=${level}&limit=${limit}&offset=${offset}`;
         // const url = `${BASE_URL}/graph/trace?from=0x4d98fb4964c532e80a43ba2089146ce4dc0ecbc2&to=0x3f5ce5fbfe3e9af3971dd833d26ba9b5c936f0be&level=5&limit=50&offset=100`;
         console.log(url);
-        return axios.get(url).then(res => res.data as GraphInput);
+        const res = await axios.get(url).then(res => res.data as GraphInput);
+        console.log('res', res);
+        const promise: any = []
+        res.edges.map((value) => {
+            promise.push(getAmount(value))
+        })
+        Promise.all(promise).then((value:any) => {
+            try {
+                console.log(value);
+                res.edges = value ;
+            } catch (err) {
+                console.log(err);
+            }
+        })
+        return res
     }
 
     const chartRef = useRef<am4plugins_forceDirected.ForceDirectedTree | null>(null);
+
+    const getAmount = async (value: any) => {
+        return new Promise(async (resolve, reject) => {
+            const url = `${BASE_URL}/transaction/${value.data.hash}`
+            const amount = await axios.get(url).then(res => {
+                return res.data.amount
+            })
+            resolve({...value,amount})
+        })
+    }
 
 
     useLayoutEffect(() => {
@@ -100,16 +128,19 @@ const Block_Tracer = () => {
                 prev[fromLabel].txList.push(cur.data.hash);
                 return prev;
             }, nodeMaps);
+            console.log('nodemap',nodeMaps)
 
             const fromLabel = getLabelledAddress(from);
             const toLabel = getLabelledAddress(to);
 
             chartRef.current.data = Object.entries(connectionMap).map(([fromAddr, data]) => {
+    
                 return {
                     name: fromAddr,
                     linkWith: Array.from(new Set(data.dests)),
                     value: [fromLabel, toLabel].includes(fromAddr) ? 10 : 5,
                     txList: Array.from(new Set(data.txList))
+
                 }
             });
 
@@ -171,7 +202,7 @@ const Block_Tracer = () => {
     const destOptions = BN_ADDRESSES.map(addr => ({ label: getLabelledAddress(addr, { showAddress: true }), value: addr }));
 
     return (
-        <div style={{backgroundColor: '#EAEAEA'}}>
+        <div style={{ backgroundColor: '#EAEAEA' }}>
             <div>
                 <a onClick={() => {
                     localStorage.removeItem('user')
@@ -179,7 +210,7 @@ const Block_Tracer = () => {
                         pathname: 'home'
                     })
                 }}
-                    style={{ float: 'right', margin: '10px', cursor: 'pointer',paddingRight:'2rem'  }}>ออกจากระบบ</a>
+                    style={{ float: 'right', margin: '10px', cursor: 'pointer', paddingRight: '2rem' }}>ออกจากระบบ</a>
             </div>
             <div style={{ justifyContent: 'center', alignItems: 'center', padding: '2rem 2rem', width: '100vw' }}>
 

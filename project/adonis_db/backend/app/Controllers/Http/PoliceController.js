@@ -58,8 +58,8 @@ class PoliceController {
         // police.dob = body.dob ;
         police.education = body.education ;
         police.training = body.training ;
-        // police.civil_history = body.civil_history ;
-        // police.civil_year = body.civil_year ;
+        police.civil_history = body.civil_history ;
+        police.civil_year = body.civil_year ;
         police.reward = body.reward ;
         police.appoint = body.appoint ;
         police.telephone = body.telephone ;

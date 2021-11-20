@@ -3,7 +3,7 @@ import axios from 'axios'
 import { useRouter } from "next/router";
 import { Row, Col, Button, Input, message } from "antd";
 import styles from '../styles/Home.module.css'
-import {useForm} from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 
 export default function Profile() {
     const URL = 'http://127.0.0.1:3333'
@@ -147,13 +147,13 @@ export default function Profile() {
                                                     <Input placeholder="พ.ต.อ. ซื่อสัตย์ สุจริต"
                                                         defaultValue={`${profile.rank} ${profile.name} ${profile.surname}`}
                                                         onChange={(e) => {
-                                                        setEditProfile({
-                                                            ...editProfile,
-                                                            rank: e.target.value.split(' ')[0] || '',
-                                                            name: e.target.value.split(' ')[1] || '',
-                                                            surname: e.target.value.split(' ')[2] || ''
-                                                        })
-                                                    }} />
+                                                            setEditProfile({
+                                                                ...editProfile,
+                                                                rank: e.target.value.split(' ')[0] || '',
+                                                                name: e.target.value.split(' ')[1] || '',
+                                                                surname: e.target.value.split(' ')[2] || ''
+                                                            })
+                                                        }} />
                                                 </Col>
                                                 :
                                                 <Col span={10} ><h3>{profile.rank + ' ' + profile.name + ' ' + profile.surname}</h3></Col>
@@ -169,14 +169,14 @@ export default function Profile() {
                                             {
                                                 showEdit ?
                                                     <Col span={10}>
-                                                        <Input 
-                                                        defaultValue={profile.position}
-                                                        onChange={(e) => {
-                                                            setEditProfile({
-                                                                ...editProfile,
-                                                                position: e.target.value
-                                                            })
-                                                        }} />
+                                                        <Input
+                                                            defaultValue={profile.position}
+                                                            onChange={(e) => {
+                                                                setEditProfile({
+                                                                    ...editProfile,
+                                                                    position: e.target.value
+                                                                })
+                                                            }} />
                                                     </Col>
                                                     :
                                                     <Col span={10} ><h3>{profile.position}</h3></Col>
@@ -194,14 +194,14 @@ export default function Profile() {
                                             </Col >
                                             {showEdit ?
                                                 <Col span={10}>
-                                                    <Input 
-                                                    defaultValue={profile.education}
-                                                    onChange={(e) => {
-                                                        setEditProfile({
-                                                            ...editProfile,
-                                                            education: e.target.value
-                                                        })
-                                                    }} />
+                                                    <Input
+                                                        defaultValue={profile.education}
+                                                        onChange={(e) => {
+                                                            setEditProfile({
+                                                                ...editProfile,
+                                                                education: e.target.value
+                                                            })
+                                                        }} />
                                                 </Col>
                                                 :
                                                 <Col span={10} ><h3>{profile.education}</h3></Col>
@@ -218,8 +218,35 @@ export default function Profile() {
                                             <Col span={10}></Col>
                                         </Row>
                                     </div>
-
                                     {getCivilyear()}
+                                    {
+                                        showEdit ?
+                                            <div style={{ margin: '10px 0px ' }}>
+                                                <Row justify="center">
+                                                    <Col span={4}>
+                                                        <Input>
+                                                        </Input>
+                                                    </Col>
+                                                    <Col span={2}>
+                                                    </Col>
+                                                    <Col span={10}>
+                                                        <Col>
+                                                            <Input>
+                                                            </Input>
+                                                        </Col>
+                                                        <div style={{ display: 'flex', justifyContent: 'end' }}>
+                                                            <Col>
+                                                                <Button>Add</Button>
+                                                            </Col>
+                                                        </div>
+                                                    </Col>
+                                                </Row>
+
+                                            </div>
+                                            :
+                                            ''
+                                    }
+
                                     <div style={{ margin: '10px 0px ' }}>
                                         <Row justify="center"  >
                                             <Col span={6}>
@@ -228,14 +255,14 @@ export default function Profile() {
                                             {
                                                 showEdit ?
                                                     <Col span={10}>
-                                                        <Input 
-                                                        defaultValue={profile.reward}
-                                                        onChange={(e) => {
-                                                            setEditProfile({
-                                                                ...editProfile,
-                                                                reward: e.target.value
-                                                            })
-                                                        }} />
+                                                        <Input
+                                                            defaultValue={profile.reward}
+                                                            onChange={(e) => {
+                                                                setEditProfile({
+                                                                    ...editProfile,
+                                                                    reward: e.target.value
+                                                                })
+                                                            }} />
                                                     </Col>
                                                     :
                                                     <Col span={10} ><h3>{profile.reward}</h3></Col>
@@ -252,14 +279,14 @@ export default function Profile() {
                                             {
                                                 showEdit ?
                                                     <Col span={10}>
-                                                        <Input 
-                                                        defaultValue={profile.appoint}
-                                                        onChange={(e) => {
-                                                            setEditProfile({
-                                                                ...editProfile,
-                                                                appoint: e.target.value
-                                                            })
-                                                        }} />
+                                                        <Input
+                                                            defaultValue={profile.appoint}
+                                                            onChange={(e) => {
+                                                                setEditProfile({
+                                                                    ...editProfile,
+                                                                    appoint: e.target.value
+                                                                })
+                                                            }} />
                                                     </Col>
                                                     :
                                                     <Col span={10} ><h3>{profile.appoint}</h3></Col>
@@ -275,14 +302,14 @@ export default function Profile() {
                                             {
                                                 showEdit ?
                                                     <Col span={10}>
-                                                        <Input 
-                                                        defaultValue={profile.training}
-                                                        onChange={(e) => {
-                                                            setEditProfile({
-                                                                ...editProfile,
-                                                                training: e.target.value
-                                                            })
-                                                        }} />
+                                                        <Input
+                                                            defaultValue={profile.training}
+                                                            onChange={(e) => {
+                                                                setEditProfile({
+                                                                    ...editProfile,
+                                                                    training: e.target.value
+                                                                })
+                                                            }} />
                                                     </Col>
                                                     :
                                                     <Col span={10} ><h3>{profile.training}</h3></Col>
@@ -298,14 +325,14 @@ export default function Profile() {
                                             {
                                                 showEdit ?
                                                     <Col span={10}>
-                                                        <Input 
-                                                        defaultValue={profile.telephone}
-                                                        onChange={(e) => {
-                                                            setEditProfile({
-                                                                ...editProfile,
-                                                                telephone: e.target.value
-                                                            })
-                                                        }} />
+                                                        <Input
+                                                            defaultValue={profile.telephone}
+                                                            onChange={(e) => {
+                                                                setEditProfile({
+                                                                    ...editProfile,
+                                                                    telephone: e.target.value
+                                                                })
+                                                            }} />
                                                     </Col>
                                                     :
                                                     <Col span={10} ><h3>{profile.telephone}</h3></Col>

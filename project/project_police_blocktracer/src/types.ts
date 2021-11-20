@@ -49,10 +49,11 @@ export type TokenInfo = {
     decimals: number
 }
 
-export type Edge = {
+export type Edge ={
     from: string,
     to: string,
-    data: any
+    data: any,
+    amount: any
 }
 
 export type GraphInput = {
