@@ -64,6 +64,7 @@ class PoliceController {
         police.appoint = body.appoint ;
         police.telephone = body.telephone ;
         await police.save()
+        console.log(body)
         return response.send("PASS!!")
     }
     

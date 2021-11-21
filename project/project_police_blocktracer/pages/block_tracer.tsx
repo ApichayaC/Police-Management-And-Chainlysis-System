@@ -44,10 +44,10 @@ const Block_Tracer = () => {
         res.edges.map((value) => {
             promise.push(getAmount(value))
         })
-        Promise.all(promise).then((value:any) => {
+        Promise.all(promise).then((value: any) => {
             try {
                 console.log(value);
-                res.edges = value ;
+                res.edges = value;
             } catch (err) {
                 console.log(err);
             }
@@ -63,7 +63,7 @@ const Block_Tracer = () => {
             const amount = await axios.get(url).then(res => {
                 return res.data.amount
             })
-            resolve({...value,amount})
+            resolve({ ...value, amount })
         })
     }
 
@@ -83,11 +83,14 @@ const Block_Tracer = () => {
             console.log("Click link: ", ev.target)
         })
 
+
         let linkHoverState = linkTemplate.states.create("hover");
         linkHoverState.properties.strokeOpacity = 1;
         linkHoverState.properties.strokeWidth = 2;
 
         let nodeTemplate = series.nodes.template;
+        // .nodes.template.label.text = "{name}"
+        // nodeTemplate.label
         nodeTemplate.label.text = "{name}";
         nodeTemplate.tooltipText = "{name}";
         nodeTemplate.fillOpacity = 1;
@@ -128,13 +131,13 @@ const Block_Tracer = () => {
                 prev[fromLabel].txList.push(cur.data.hash);
                 return prev;
             }, nodeMaps);
-            console.log('nodemap',nodeMaps)
+            console.log('nodemap', nodeMaps)
 
             const fromLabel = getLabelledAddress(from);
             const toLabel = getLabelledAddress(to);
 
             chartRef.current.data = Object.entries(connectionMap).map(([fromAddr, data]) => {
-    
+
                 return {
                     name: fromAddr,
                     linkWith: Array.from(new Set(data.dests)),

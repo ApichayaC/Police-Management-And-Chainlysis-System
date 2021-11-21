@@ -24,7 +24,9 @@ export default function Profile() {
             reward: profile.reward,
             appoint: profile.appoint,
             training: profile.training,
-            telephone: profile.telephone
+            telephone: profile.telephone,
+            civil_year: profile.civil_year,
+            civil_history: profile.civil_history
         })
     }
 
@@ -39,7 +41,9 @@ export default function Profile() {
         reward: '',
         appoint: '',
         training: '',
-        telephone: ''
+        telephone: '',
+        civil_year: '',
+        civil_history: ''
     });
 
     const [confirm, setComfirm] = useState<any>(false)
@@ -48,7 +52,7 @@ export default function Profile() {
         console.log(editProfile)
         //  if (editProfile.appoint&&editProfile.education&&editProfile.position&&editProfile.name&&editProfile.rank&&editProfile.reward&&editProfile.surname) 
         if (editProfile.rank && editProfile.name && editProfile.surname) {
-            console.log(editProfile);
+            console.log('EditProfile', editProfile);
 
             const EditProfile = await axios.put(`${URL}` + '/update/' + Router.query.id, {
                 ...editProfile
@@ -68,8 +72,10 @@ export default function Profile() {
                     reward: editProfile.reward,
                     appoint: editProfile.appoint,
                     training: editProfile.training,
-                    telephone: editProfile.telephone
+                    telephone: editProfile.telephone,
 
+                    civil_year: editProfile.civil_year,
+                    civil_history: editProfile.civil_history
                 })
                 // Router.push({
                 //     pathname: 'profile'
@@ -92,6 +98,24 @@ export default function Profile() {
         }
     }
 
+    const getHistory = (years: string, history: string) => {
+        setProflie({
+            ...profile,
+            civil_year: profile.civil_year + ';' + years,
+            civil_history: profile.civil_history + ';' + history
+        });
+        setEditProfile({
+            ...editProfile,
+            civil_year: profile.civil_year + ';' + years,
+            civil_history: profile.civil_history + ';' + history
+        })
+        setCivil({
+            year: '',
+            history: ''
+        })
+    }
+
+    const [civil, setCivil] = useState({ year: '', history: '' })
     const getCivilyear = () => {
         if (profile.civil_year && profile.civil_history) {
             const years = profile.civil_year.split(';')
@@ -224,19 +248,33 @@ export default function Profile() {
                                             <div style={{ margin: '10px 0px ' }}>
                                                 <Row justify="center">
                                                     <Col span={4}>
-                                                        <Input>
+                                                        <Input
+                                                            value={civil.year}
+                                                            onChange={(e) => {
+                                                                setCivil({
+                                                                    ...civil,
+                                                                    year: e.target.value
+                                                                })
+                                                            }}>
                                                         </Input>
                                                     </Col>
                                                     <Col span={2}>
                                                     </Col>
                                                     <Col span={10}>
                                                         <Col>
-                                                            <Input>
+                                                            <Input
+                                                                value={civil.history}
+                                                                onChange={(e) => {
+                                                                    setCivil({
+                                                                        ...civil,
+                                                                        history: e.target.value
+                                                                    })
+                                                                }}>
                                                             </Input>
                                                         </Col>
                                                         <div style={{ display: 'flex', justifyContent: 'end' }}>
                                                             <Col>
-                                                                <Button>Add</Button>
+                                                                <Button onClick={() => { getHistory(civil.year, civil.history) }}>Add</Button>
                                                             </Col>
                                                         </div>
                                                     </Col>
