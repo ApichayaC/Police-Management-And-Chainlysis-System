@@ -25,8 +25,7 @@ const Block_Tracer = () => {
     const [level, setLevel] = useState('5');
     const [page, setPage] = useState('1');
     const [loading, setLoading] = useState(false);
-
-    const [amount, setAmount] = useState()
+    const [amount, setAmount] = useState([]);
 
     const [relations, setRelations] = useState<GraphInput>();
     const [visible, setVisible] = useState(false);
@@ -47,7 +46,8 @@ const Block_Tracer = () => {
         Promise.all(promise).then((value: any) => {
             try {
                 console.log(value);
-                res.edges = value;
+                // res.edges = value;
+                // setAmount(value);
             } catch (err) {
                 console.log(err);
             }
@@ -59,11 +59,11 @@ const Block_Tracer = () => {
 
     const getAmount = async (value: any) => {
         return new Promise(async (resolve, reject) => {
-            const url = `${BASE_URL}/transaction/${value.data.hash}`
+            const url = `${BASE_URL}/transaction/${value.data.hash}`;
             const amount = await axios.get(url).then(res => {
                 return res.data.amount
             })
-            resolve({ ...value, amount })
+            resolve({ hash: value.data.hash, amount });
         })
     }
 
@@ -272,7 +272,15 @@ const Block_Tracer = () => {
                         {
                             selectedNode && selectedNode.txList.map((hash: string, index: number) => (
                                 <div key={hash}>
-                                    <span>#{index + 1} : </span>
+                                    <span>{index + 1} : </span>
+                                    <span> Amount </span>
+                                    <span 
+                                    style={{color:"red"}}>
+                                    {
+                                        amount.length > 0 && amount.filter(item => item['hash'] == hash)[0]['amount'] || '-'
+                                    }
+                                    </span>
+                                    <span> USDT , </span>
                                     <a href={`${config.ETHERSCAN_BASE_URL}/tx/${hash}`} target="_blank">View Transaction</a>
                                 </div>
                             ))
