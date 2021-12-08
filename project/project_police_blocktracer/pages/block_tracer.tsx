@@ -47,7 +47,7 @@ const Block_Tracer = () => {
             try {
                 console.log(value);
                 // res.edges = value;
-                // setAmount(value);
+                setAmount(value);
             } catch (err) {
                 console.log(err);
             }
@@ -64,6 +64,7 @@ const Block_Tracer = () => {
                 return res.data.amount
             })
             resolve({ hash: value.data.hash, amount });
+            console.log(amount)
         })
     }
 
@@ -76,6 +77,7 @@ const Block_Tracer = () => {
         series.dataFields.children = "children";
         series.dataFields.id = "name";
         series.dataFields.linkWith = "linkWith";
+        series.fontSize = 15;
 
         let linkTemplate = series.links.template;
         linkTemplate.strokeWidth = 1;
@@ -83,14 +85,30 @@ const Block_Tracer = () => {
             console.log("Click link: ", ev.target)
         })
 
+        series.links.template.adapter.add("strokeWidth", function (width: any, target: any) {
+            var from = target.source;
+            //var to = target.target;
+            var widths = from.dataItem.dataContext.amount;
+            if(widths>0&&widths<3000){
+                return 2
+            }
+            else if(widths>3000&&widths<6000){
+                return 10
+            }
+            else if(widths>6000&&widths<10000){
+                return 18
+            }
+            else if(widths>10000){
+                return 30
+            }
+            return width;
+        });
 
         let linkHoverState = linkTemplate.states.create("hover");
         linkHoverState.properties.strokeOpacity = 1;
         linkHoverState.properties.strokeWidth = 2;
 
         let nodeTemplate = series.nodes.template;
-        // .nodes.template.label.text = "{name}"
-        // nodeTemplate.label
         nodeTemplate.label.text = "{name}";
         nodeTemplate.tooltipText = "{name}";
         nodeTemplate.fillOpacity = 1;
@@ -113,7 +131,7 @@ const Block_Tracer = () => {
 
 
     useEffect(() => {
-        if (chartRef.current && relations) {
+        if (chartRef.current && relations&& amount) {
 
             const nodeMaps = relations.nodes.reduce((prev, cur) => {
                 const fromLabel = getLabelledAddress(cur);
@@ -137,19 +155,44 @@ const Block_Tracer = () => {
             const toLabel = getLabelledAddress(to);
 
             chartRef.current.data = Object.entries(connectionMap).map(([fromAddr, data]) => {
+                //console.log(data.txList)
+                const hashCheck: any = [];
+                data.txList.map((value, index) => {
+                    if (hashCheck.length == 0) {
+                        hashCheck.push(value);
+                    }
+                    else {
+                        const found = hashCheck.find((elements: any) => elements == value)
+                        //console.log(`${index}found`,found)
+                        if (!found) {
+                            hashCheck.push(value);
+                        }
+                    }
+                    //console.log('hash',hashCheck)
+                })
+                const amounts: any = []
+                hashCheck.map((value: any) => {
+                    amount.filter((hash) => {
+                        if (hash.hash == value) {
+                            amounts.push(hash.amount)
+                        }
+                    })
+                })
+                const total = amounts.reduce((a: any, b: any) => a + b, 0);
 
                 return {
                     name: fromAddr,
                     linkWith: Array.from(new Set(data.dests)),
                     value: [fromLabel, toLabel].includes(fromAddr) ? 10 : 5,
-                    txList: Array.from(new Set(data.txList))
+                    txList: Array.from(new Set(data.txList)),
+                    amount: total
 
                 }
             });
 
             console.log(chartRef.current.data);
         }
-    }, [chartRef.current, relations]);
+    }, [chartRef.current, relations,amount]);
 
     const handleClickNode = (address: string) => {
         if (chartRef.current) {
@@ -274,11 +317,11 @@ const Block_Tracer = () => {
                                 <div key={hash}>
                                     <span>{index + 1} : </span>
                                     <span> Amount </span>
-                                    <span 
-                                    style={{color:"red"}}>
-                                    {
-                                        amount.length > 0 && amount.filter(item => item['hash'] == hash)[0]['amount'] || '-'
-                                    }
+                                    <span
+                                        style={{ color: "red" }}>
+                                        {
+                                            amount.length > 0 && amount.filter(item => item['hash'] == hash)[0]['amount'] || '-'
+                                        }
                                     </span>
                                     <span> USDT , </span>
                                     <a href={`${config.ETHERSCAN_BASE_URL}/tx/${hash}`} target="_blank">View Transaction</a>

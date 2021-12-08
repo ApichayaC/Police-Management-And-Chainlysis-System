@@ -102,3 +102,4 @@ class PoliceController {
 }
 
 module.exports = PoliceController
+

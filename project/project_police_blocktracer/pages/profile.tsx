@@ -99,15 +99,16 @@ export default function Profile() {
     }
 
     const getHistory = (years: string, history: string) => {
+        //const civil_year = profile.civil_year ? profile.civil_year : ''  + ';' + years
         setProflie({
             ...profile,
-            civil_year: profile.civil_year + ';' + years,
-            civil_history: profile.civil_history + ';' + history
+            civil_year: profile.civil_year ? profile.civil_year+';'+years : years,
+            civil_history: profile.civil_history ? profile.civil_history+';'+history : history
         });
         setEditProfile({
             ...editProfile,
-            civil_year: profile.civil_year + ';' + years,
-            civil_history: profile.civil_history + ';' + history
+            civil_year: profile.civil_year ? profile.civil_year + ';' + years : years,
+            civil_history: profile.civil_history ? profile.civil_history + ';' + history : history
         })
         setCivil({
             year: '',
