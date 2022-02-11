@@ -39,9 +39,10 @@ class ImportController {
                     newPolice.civil_year = explanation.getCell('BZ' + rowNumber).value;
                     newPolice.reward = explanation.getCell('CA' + rowNumber).value;
                     newPolice.appoint = explanation.getCell('CB' + rowNumber).value;
-
+                    newPolice.role = explanation.getCell('CC'+rowNumber).value;
                     newPolice.idCard = explanation.getCell('F'+rowNumber).value;
                     newPolice.idPosition = explanation.getCell('AQ'+rowNumber).value;
+        
 
 
                     await newPolice.save();

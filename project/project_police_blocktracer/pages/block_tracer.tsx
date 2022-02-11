@@ -20,8 +20,10 @@ const PAGE_SIZE = 5;
 
 const Block_Tracer = () => {
 
-    const [from, setFrom] = useState(THEIF_ADDRESSES.ETH[0].toLowerCase());
-    const [to, setTo] = useState(BN_ADDRESSES[0].toLowerCase());
+    //const [from, setFrom] = useState(THEIF_ADDRESSES.ETH[0].toLowerCase());
+    const [from, setFrom] = useState('');
+    //const [to, setTo] = useState(BN_ADDRESSES[0].toLowerCase());
+    const [to, setTo] = useState('');
     const [level, setLevel] = useState('5');
     const [page, setPage] = useState('1');
     const [loading, setLoading] = useState(false);
@@ -37,6 +39,7 @@ const Block_Tracer = () => {
         const url = `${BASE_URL}/graph/trace?from=${from}&to=${to}&level=${level}&limit=${limit}&offset=${offset}`;
         // const url = `${BASE_URL}/graph/trace?from=0x4d98fb4964c532e80a43ba2089146ce4dc0ecbc2&to=0x3f5ce5fbfe3e9af3971dd833d26ba9b5c936f0be&level=5&limit=50&offset=100`;
         console.log(url);
+        console.log('from',from);
         const res = await axios.get(url).then(res => res.data as GraphInput);
         console.log('res', res);
         const promise: any = []
@@ -62,13 +65,16 @@ const Block_Tracer = () => {
             const url = `${BASE_URL}/transaction/${value.data.hash}`;
             const amount = await axios.get(url).then(res => {
                 return res.data.amount
+            }).catch(err=>{
+                console.log(err);
             })
+            console.log('amount',amount)
             resolve({ hash: value.data.hash, amount });
-            console.log(amount)
+            
         })
     }
 
-
+    //Graph
     useLayoutEffect(() => {
         let chart = am4core.create("chartdiv", am4plugins_forceDirected.ForceDirectedTree);
         let series = chart.series.push(new am4plugins_forceDirected.ForceDirectedSeries())
@@ -89,16 +95,16 @@ const Block_Tracer = () => {
             var from = target.source;
             //var to = target.target;
             var widths = from.dataItem.dataContext.amount;
-            if(widths>0&&widths<3000){
+            if (widths > 0 && widths < 3000) {
                 return 2
             }
-            else if(widths>3000&&widths<6000){
+            else if (widths > 3000 && widths < 6000) {
                 return 10
             }
-            else if(widths>6000&&widths<10000){
+            else if (widths > 6000 && widths < 10000) {
                 return 18
             }
-            else if(widths>10000){
+            else if (widths > 10000) {
                 return 30
             }
             return width;
@@ -131,7 +137,7 @@ const Block_Tracer = () => {
 
 
     useEffect(() => {
-        if (chartRef.current && relations&& amount) {
+        if (chartRef.current && relations && amount) {
 
             const nodeMaps = relations.nodes.reduce((prev, cur) => {
                 const fromLabel = getLabelledAddress(cur);
@@ -192,7 +198,7 @@ const Block_Tracer = () => {
 
             console.log(chartRef.current.data);
         }
-    }, [chartRef.current, relations,amount]);
+    }, [chartRef.current, relations, amount]);
 
     const handleClickNode = (address: string) => {
         if (chartRef.current) {
@@ -205,9 +211,14 @@ const Block_Tracer = () => {
         }
     }
 
-
+    //button tracer
     const handleClick = async () => {
-        await loadRelations();
+        await loadRelations(); 
+    }
+    //button update
+    const updateData = async() => {
+        const putGraph = await axios.get(`${BASE_URL}/graph/put`);
+        return putGraph ;
     }
 
     useEffect(() => {
@@ -239,8 +250,7 @@ const Block_Tracer = () => {
         }
         setLoading(false);
     }
-
-
+    
     useAppStore(state => state.addressList);
     const getLabelledAddress = useAppStore(state => state.getLabelledAddress);
 
@@ -269,13 +279,13 @@ const Block_Tracer = () => {
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                         <div>
                             <label>FROM : </label>
-                            {/* <Input type='text' style={{ width: 300 }} /> */}
-                            <Select className="w-full" options={srcOptions} value={from} onChange={v => setFrom(v)} style={{ width: 300 }} />
+                            <Input type='text' style={{ width: 300 } } onChange={v=> setFrom(v.target.value)}/>
+                            {/* <Select className="w-full" options={srcOptions} value={from} onChange={v => setFrom(v)} style={{ width: 300 }} /> */}
                         </div>
                         <div>
                             <label>TO : </label>
-                            <Select className="w-full" options={destOptions} value={to} onChange={v => setTo(v)} style={{ width: 300 }} />
-                            {/* <Input type='text' style={{ width: 300 }} /> */}
+                            {/* <Select className="w-full" options={destOptions} value={to} onChange={v => setTo(v)} style={{ width: 300 }} /> */}
+                            <Input type='text' style={{ width: 300 }} onChange={(v:any) => setTo(v.target.value)} />
                         </div>
                         <div>
                             <label>LEVELS : </label>
@@ -285,6 +295,9 @@ const Block_Tracer = () => {
                         <div>
                             <label>PAGES : </label>
                             <Input type="number" value={page} onChange={e => setPage(e.target.value)} style={{ width: 150 }} />
+                        </div>
+                        <div>
+                            <Button type="primary" onClick={updateData}>Update</Button>
                         </div>
                         <div>
                             <Button type="primary" onClick={handleClick} loading={loading}>

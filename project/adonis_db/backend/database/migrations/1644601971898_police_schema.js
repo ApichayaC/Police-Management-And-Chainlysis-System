@@ -22,6 +22,8 @@ class PoliceSchema extends Schema {
 
       table.string('idCard')
       table.string('idPosition')
+
+      table.string('role')
       table.timestamps()
     })
   }

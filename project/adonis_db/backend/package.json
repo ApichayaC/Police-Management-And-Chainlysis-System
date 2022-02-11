@@ -27,7 +27,8 @@
     "@adonisjs/session": "^1.0.27",
     "@adonisjs/shield": "^1.0.8",
     "exceljs": "^4.2.1",
-    "mysql": "^2.18.1"
+    "mysql": "^2.18.1",
+    "nodemon": "^2.0.15"
   },
   "devDependencies": {},
   "autoload": {

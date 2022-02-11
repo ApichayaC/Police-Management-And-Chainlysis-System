@@ -42,6 +42,8 @@ class PoliceController {
 
         newPolice.idCard = body.idCard ;
         newPolice.idPosition = body.idPosition ;
+        
+        newPolice.role = body.role ;
 
         await newPolice.save();
         return response.send("PASS");
@@ -63,6 +65,7 @@ class PoliceController {
         police.reward = body.reward ;
         police.appoint = body.appoint ;
         police.telephone = body.telephone ;
+        police.role = body.role ;
         await police.save()
         console.log(body)
         return response.send("PASS!!")
