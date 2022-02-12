@@ -12,7 +12,6 @@ class PoliceController {
         const polices = await Database.table("police").select("*") ;
         response.send(polices)
          //const plc = await Police.query().with('police').fetch()
-        response.send(polices)
 
     }
 
@@ -88,11 +87,12 @@ class PoliceController {
                 return value
             }
         })
-        console.log(user)
+        console.log('user',user)
         if(user){
             response.send({
                 message : 'OK',
-                status : true
+                status : true ,
+                role : user.role
             })
         }
         else{

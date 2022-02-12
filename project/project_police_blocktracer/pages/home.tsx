@@ -21,11 +21,12 @@ export default function Home() {
                         style={{ float: 'right', margin: '10px', cursor: 'pointer', paddingRight: '2rem' }}
                         href="/login">เข้าสู่ระบบ</a>}
             </div>
+
             <div style={{ backgroundColor: '#EAEAEA', display: 'flex', position: 'relative', justifyContent: 'center', alignItems: 'center', padding: '0 0.5rem', height: '90vh', width: '100vw' }}>
                 <div className={styles.box}>
-                    <button className={styles.button} style={{ marginLeft: '75px', marginTop: '90px' }}>
+                    {/* <button className={styles.button} style={{ marginLeft: '75px', marginTop: '90px' }}>
                         <a href="/info_police" className={styles.fonthome} style={{ margin: '-14px 50px 0px 65px' }}>หน้าแรก</a>
-                    </button>
+                    </button> */}
 
                     <button className={styles.button} style={{ marginLeft: '75px', marginTop: '50px' }}>
                         <a href="/police_list" className={styles.fonthome} style={{ margin: '-14px 50px 0px 45px' }}>ข้อมูลตำรวจ</a>

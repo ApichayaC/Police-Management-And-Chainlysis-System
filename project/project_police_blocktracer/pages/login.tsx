@@ -8,17 +8,24 @@ export default function Login() {
     const router = useRouter();
     const url = 'http://127.0.0.1:3333';
 
-    const onFinish = async(values: any) => {
-        //const user = await axios.post('http://127.0.0.1:3333/login',{username:values.username,password:values.password})
-        const user = await axios.post(url+'/login',{username:'1808 09318 0283',password:'3130100000000'})
-        
+    const onFinish = async (values: any) => {
+        const user = await axios.post(url + '/login', { username: values.username, password: values.password })
+        //const user = await axios.post(url+'/login',{username:'1808 09318 0283',password:'3130100000000'})
+
         console.log('Success:', values);
-        console.log(user)
-        if(user.data.status){
-            router.push({
-                pathname: 'home',
-            })
-            localStorage.setItem('user','success')
+        console.log('login', user)
+        if (user.data.status) {
+            if (user.data.role == 'Admin') {
+                router.push({
+                    pathname: 'home',
+                })
+            }
+            else if(user.data.role == 'Editor'){
+                router.push({
+                    pathname: 'police_list',
+                })
+            }
+            localStorage.setItem('user', 'success')
         }
     };
 
@@ -26,7 +33,7 @@ export default function Login() {
         console.log('Failed:', errorInfo);
     };
     return (
-        <div style={{ backgroundColor: '#EAEAEA',display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100vw',height:'100vh' }}>
+        <div style={{ backgroundColor: '#EAEAEA', display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100vw', height: '100vh' }}>
             <div>
                 <Form
                     name="basic"
@@ -50,7 +57,7 @@ export default function Login() {
                         name="password"
                         rules={[{ required: true, message: 'Please input your password!' }]}
                     >
-                        <Input.Password placeholder='password'  />
+                        <Input.Password placeholder='password' />
                     </Form.Item>
 
                     {/* <Form.Item name="remember" valuePropName="checked" wrapperCol={{ offset: 8, span: 16 }}>
