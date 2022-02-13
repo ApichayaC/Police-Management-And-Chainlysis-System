@@ -12,6 +12,7 @@ export default function Login() {
         const user = await axios.post(url + '/login', { username: values.username, password: values.password })
         //const user = await axios.post(url+'/login',{username:'1808 09318 0283',password:'3130100000000'})
 
+
         console.log('Success:', values);
         console.log('login', user)
         if (user.data.status) {
@@ -25,9 +26,11 @@ export default function Login() {
                     pathname: 'police_list',
                 })
             }
-            localStorage.setItem('user', 'success')
+            localStorage.setItem('user', 'success');
+            localStorage.setItem('role', user.data.role);
         }
     };
+
 
     const onFinishFailed = (errorInfo: any) => {
         console.log('Failed:', errorInfo);

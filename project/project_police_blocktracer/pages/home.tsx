@@ -1,14 +1,30 @@
 import React, { useState, useEffect } from "react";
 import styles from '../styles/Home.module.css'
 import info_police from '../pages'
+import { useRouter } from 'next/router';
 
 
 export default function Home() {
     const [loginCheck, setLoginCheck] = useState('');
+    const router = useRouter();
     useEffect(() => {
         const user = localStorage.getItem('user');
-        setLoginCheck(user)
+        const role = localStorage.getItem('role')
+        if (user == 'success') {
+            if(role=='Editor'){
+                router.push({
+                    pathname: 'police_list'
+                })
+            }   
+        }
+        else {
+            router.push({
+                pathname: 'login'
+            })
+        }
+        setLoginCheck(user);
     }, [loginCheck])
+    
     return (
         <div style={{ backgroundColor: '#EAEAEA', height: '100vh', width: '100vw' }}>
             <div>

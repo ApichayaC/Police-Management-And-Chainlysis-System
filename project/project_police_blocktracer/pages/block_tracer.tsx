@@ -24,7 +24,7 @@ const Block_Tracer = () => {
     const [from, setFrom] = useState('');
     //const [to, setTo] = useState(BN_ADDRESSES[0].toLowerCase());
     const [to, setTo] = useState('');
-    const [level, setLevel] = useState('5');
+    const [level, setLevel] = useState('4');
     const [page, setPage] = useState('1');
     const [loading, setLoading] = useState(false);
     const [amount, setAmount] = useState([]);
@@ -223,8 +223,16 @@ const Block_Tracer = () => {
 
     useEffect(() => {
         const storage = localStorage.getItem('user')
+        const role = localStorage.getItem('role')
         if (storage == 'success') {
-            loadRelations();
+            if(role=='Admin'){
+                loadRelations();
+            }   
+            else{
+                router.push({
+                    pathname: 'police_list'
+                })
+            }
         }
         else {
             router.push({
@@ -263,7 +271,7 @@ const Block_Tracer = () => {
                 <a onClick={() => {
                     localStorage.removeItem('user')
                     router.push({
-                        pathname: 'home'
+                        pathname: 'login'
                     })
                 }}
                     style={{ float: 'right', margin: '10px', cursor: 'pointer', paddingRight: '2rem' }}>ออกจากระบบ</a>

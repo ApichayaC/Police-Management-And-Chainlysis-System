@@ -147,7 +147,7 @@ export default function Profile() {
                 <a onClick={() => {
                     localStorage.removeItem('user')
                     Router.push({
-                        pathname: 'home'
+                        pathname: 'login'
                     })
                 }}
                     style={{ float: 'right', margin: '10px', cursor: 'pointer', paddingRight: '2rem' }}>ออกจากระบบ</a>

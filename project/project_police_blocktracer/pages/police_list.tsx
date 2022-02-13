@@ -108,17 +108,26 @@ export default function List() {
         },
     ];
 
+    const [loginCheck, setLoginCheck] = useState('');
+    const [checkRole,setCheckRole] = useState('');
+    useEffect(() => {
+        const user = localStorage.getItem('user');
+        const role = localStorage.getItem('role');
+        setLoginCheck(user);
+        setCheckRole(role);
+    }, [loginCheck,checkRole])
+
 
     return (
-        <div style={{backgroundColor: '#EAEAEA'}}>
+        <div style={{ backgroundColor: '#EAEAEA' }}>
             <div>
                 <a onClick={() => {
                     localStorage.removeItem('user')
                     router.push({
-                        pathname: 'home'
+                        pathname: 'login'
                     })
                 }}
-                    style={{ float: 'right', margin: '10px', cursor: 'pointer',paddingRight:'2rem'  }}>ออกจากระบบ</a>
+                    style={{ float: 'right', margin: '10px', cursor: 'pointer', paddingRight: '2rem' }}>ออกจากระบบ</a>
             </div>
             <div style={{ justifyContent: 'center', alignItems: 'center', padding: '2rem 2rem', width: '100vw' }}>
                 <div className={styles.tapbar}>
@@ -139,10 +148,11 @@ export default function List() {
                         />
                     </div>
                     <div style={{ justifyContent: 'center', textAlign: 'left', padding: '0px 20px 30px 70px' }}>
-                        <Button
-                            href='/home'>
+                        {checkRole == "Admin" ? 
+                        <Button href='/home'>
                             Back
-                        </Button>
+                        </Button> : ''}
+
                     </div>
 
 
