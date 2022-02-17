@@ -20,10 +20,10 @@ const PAGE_SIZE = 5;
 
 const Block_Tracer = () => {
 
-    //const [from, setFrom] = useState(THEIF_ADDRESSES.ETH[0].toLowerCase());
-    const [from, setFrom] = useState('');
-    //const [to, setTo] = useState(BN_ADDRESSES[0].toLowerCase());
-    const [to, setTo] = useState('');
+    const [from, setFrom] = useState(THEIF_ADDRESSES.ETH[0].toLowerCase());
+    //const [from, setFrom] = useState('');
+    const [to, setTo] = useState(BN_ADDRESSES[0].toLowerCase());
+    //const [to, setTo] = useState('');
     const [level, setLevel] = useState('4');
     const [page, setPage] = useState('1');
     const [loading, setLoading] = useState(false);
@@ -198,6 +198,24 @@ const Block_Tracer = () => {
 
             console.log(chartRef.current.data);
         }
+
+        const storage = localStorage.getItem('user')
+        const role = localStorage.getItem('role')
+        if (storage == 'success') {
+            if(role=='Admin'){
+                loadRelations();
+            }   
+            else{
+                router.push({
+                    pathname: 'police_list'
+                })
+            }
+        }
+        else {
+            router.push({
+                pathname: 'login'
+            })
+        }
     }, [chartRef.current, relations, amount]);
 
     const handleClickNode = (address: string) => {
@@ -221,26 +239,26 @@ const Block_Tracer = () => {
         return putGraph ;
     }
 
-    useEffect(() => {
-        const storage = localStorage.getItem('user')
-        const role = localStorage.getItem('role')
-        if (storage == 'success') {
-            if(role=='Admin'){
-                loadRelations();
-            }   
-            else{
-                router.push({
-                    pathname: 'police_list'
-                })
-            }
-        }
-        else {
-            router.push({
-                pathname: 'login'
-            })
-        }
+    // useEffect(() => {
+    //     const storage = localStorage.getItem('user')
+    //     const role = localStorage.getItem('role')
+    //     if (storage == 'success') {
+    //         if(role=='Admin'){
+    //             loadRelations();
+    //         }   
+    //         else{
+    //             router.push({
+    //                 pathname: 'police_list'
+    //             })
+    //         }
+    //     }
+    //     else {
+    //         router.push({
+    //             pathname: 'login'
+    //         })
+    //     }
 
-    }, []);
+    // }, []);
 
 
     const loadRelations = async () => {
@@ -287,13 +305,13 @@ const Block_Tracer = () => {
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                         <div>
                             <label>FROM : </label>
-                            <Input type='text' style={{ width: 300 } } onChange={v=> setFrom(v.target.value)}/>
+                            <Input type='text' style={{ width: 300 } } onChange={v=> setFrom(v.target.value.toLowerCase())}/>
                             {/* <Select className="w-full" options={srcOptions} value={from} onChange={v => setFrom(v)} style={{ width: 300 }} /> */}
                         </div>
                         <div>
                             <label>TO : </label>
                             {/* <Select className="w-full" options={destOptions} value={to} onChange={v => setTo(v)} style={{ width: 300 }} /> */}
-                            <Input type='text' style={{ width: 300 }} onChange={(v:any) => setTo(v.target.value)} />
+                            <Input type='text' style={{ width: 300 }} onChange={(v:any) => setTo(v.target.value.toLowerCase())} />
                         </div>
                         <div>
                             <label>LEVELS : </label>
