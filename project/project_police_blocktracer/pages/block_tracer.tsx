@@ -20,10 +20,10 @@ const PAGE_SIZE = 5;
 
 const Block_Tracer = () => {
 
-    const [from, setFrom] = useState(THEIF_ADDRESSES.ETH[0].toLowerCase());
-    //const [from, setFrom] = useState('');
-    const [to, setTo] = useState(BN_ADDRESSES[0].toLowerCase());
-    //const [to, setTo] = useState('');
+    //const [from, setFrom] = useState(THEIF_ADDRESSES.ETH[0].toLowerCase());
+    const [from, setFrom] = useState('');
+    //const [to, setTo] = useState(BN_ADDRESSES[0].toLowerCase());
+    const [to, setTo] = useState('');
     const [level, setLevel] = useState('4');
     const [page, setPage] = useState('1');
     const [loading, setLoading] = useState(false);
@@ -39,40 +39,40 @@ const Block_Tracer = () => {
         const url = `${BASE_URL}/graph/trace?from=${from}&to=${to}&level=${level}&limit=${limit}&offset=${offset}`;
         // const url = `${BASE_URL}/graph/trace?from=0x4d98fb4964c532e80a43ba2089146ce4dc0ecbc2&to=0x3f5ce5fbfe3e9af3971dd833d26ba9b5c936f0be&level=5&limit=50&offset=100`;
         console.log(url);
-        console.log('from',from);
+        console.log('from', from);
         const res = await axios.get(url).then(res => res.data as GraphInput);
         console.log('res', res);
-        const promise: any = []
-        res.edges.map((value) => {
-            promise.push(getAmount(value))
-        })
-        Promise.all(promise).then((value: any) => {
-            try {
-                console.log(value);
-                // res.edges = value;
-                setAmount(value);
-            } catch (err) {
-                console.log(err);
-            }
-        })
+        // const promise: any = []
+        // res.edges.map((value) => {
+        //     promise.push(getAmount(value))
+        // })
+        // Promise.all(promise).then((value: any) => {
+        //     try {
+        //         console.log(value);
+        //         // res.edges = value;
+        //         setAmount(value);
+        //     } catch (err) {
+        //         console.log(err);
+        //     }
+        // })
         return res
     }
 
     const chartRef = useRef<am4plugins_forceDirected.ForceDirectedTree | null>(null);
 
-    const getAmount = async (value: any) => {
-        return new Promise(async (resolve, reject) => {
-            const url = `${BASE_URL}/transaction/${value.data.hash}`;
-            const amount = await axios.get(url).then(res => {
-                return res.data.amount
-            }).catch(err=>{
-                console.log(err);
-            })
-            console.log('amount',amount)
-            resolve({ hash: value.data.hash, amount });
-            
-        })
-    }
+    // const getAmount = async (value: any) => {
+    //     return new Promise(async (resolve, reject) => {
+    //         const url = `${BASE_URL}/transaction/${value.data.hash}`;
+    //         const amount = await axios.get(url).then(res => {
+    //             return res.data.amount
+    //         }).catch(err=>{
+    //             console.log(err);
+    //         })
+    //         console.log('amount',amount)
+    //         resolve({ hash: value.data.hash, amount });
+
+    //     })
+    // }
 
     //Graph
     useLayoutEffect(() => {
@@ -137,7 +137,7 @@ const Block_Tracer = () => {
 
 
     useEffect(() => {
-        if (chartRef.current && relations && amount) {
+        if (chartRef.current && relations) {
 
             const nodeMaps = relations.nodes.reduce((prev, cur) => {
                 const fromLabel = getLabelledAddress(cur);
@@ -176,22 +176,22 @@ const Block_Tracer = () => {
                     }
                     //console.log('hash',hashCheck)
                 })
-                const amounts: any = []
-                hashCheck.map((value: any) => {
-                    amount.filter((hash) => {
-                        if (hash.hash == value) {
-                            amounts.push(hash.amount)
-                        }
-                    })
-                })
-                const total = amounts.reduce((a: any, b: any) => a + b, 0);
+                // const amounts: any = []
+                // hashCheck.map((value: any) => {
+                //     amount.filter((hash) => {
+                //         if (hash.hash == value) {
+                //             amounts.push(hash.amount)
+                //         }
+                //     })
+                // })
+                //const total = amounts.reduce((a: any, b: any) => a + b, 0);
 
                 return {
                     name: fromAddr,
                     linkWith: Array.from(new Set(data.dests)),
                     value: [fromLabel, toLabel].includes(fromAddr) ? 10 : 5,
                     txList: Array.from(new Set(data.txList)),
-                    amount: total
+                    //amount: total
 
                 }
             });
@@ -202,10 +202,13 @@ const Block_Tracer = () => {
         const storage = localStorage.getItem('user')
         const role = localStorage.getItem('role')
         if (storage == 'success') {
-            if(role=='Admin'){
-                loadRelations();
-            }   
-            else{
+            if (role == 'Admin') {
+                //loadRelations();
+                router.push({
+                    pathname: 'block_tracer'
+                })
+            }
+            else {
                 router.push({
                     pathname: 'police_list'
                 })
@@ -216,7 +219,7 @@ const Block_Tracer = () => {
                 pathname: 'login'
             })
         }
-    }, [chartRef.current, relations, amount]);
+    }, [chartRef.current, relations]);
 
     const handleClickNode = (address: string) => {
         if (chartRef.current) {
@@ -231,41 +234,19 @@ const Block_Tracer = () => {
 
     //button tracer
     const handleClick = async () => {
-        await loadRelations(); 
+        await loadRelations();
     }
     //button update
-    const updateData = async() => {
+    const updateData = async () => {
         const putGraph = await axios.get(`${BASE_URL}/graph/put`);
-        return putGraph ;
+        return putGraph;
     }
-
-    // useEffect(() => {
-    //     const storage = localStorage.getItem('user')
-    //     const role = localStorage.getItem('role')
-    //     if (storage == 'success') {
-    //         if(role=='Admin'){
-    //             loadRelations();
-    //         }   
-    //         else{
-    //             router.push({
-    //                 pathname: 'police_list'
-    //             })
-    //         }
-    //     }
-    //     else {
-    //         router.push({
-    //             pathname: 'login'
-    //         })
-    //     }
-
-    // }, []);
-
 
     const loadRelations = async () => {
         setLoading(true);
         try {
             console.time("loadRelations");
-            const res = await getAccountRelations(from.toLowerCase(), to.toLowerCase(), +level, PAGE_SIZE, (+page - 1) * PAGE_SIZE);
+            const res = await getAccountRelations(from, to, +level, PAGE_SIZE, (+page - 1) * PAGE_SIZE);
             console.timeEnd("loadRelations");
             setRelations(res);
         } catch (e: any) {
@@ -276,7 +257,7 @@ const Block_Tracer = () => {
         }
         setLoading(false);
     }
-    
+
     useAppStore(state => state.addressList);
     const getLabelledAddress = useAppStore(state => state.getLabelledAddress);
 
@@ -284,100 +265,136 @@ const Block_Tracer = () => {
     const destOptions = BN_ADDRESSES.map(addr => ({ label: getLabelledAddress(addr, { showAddress: true }), value: addr }));
 
     return (
-        <div style={{ backgroundColor: '#EAEAEA' }}>
-            <div>
-                <a onClick={() => {
-                    localStorage.removeItem('user')
-                    router.push({
-                        pathname: 'login'
-                    })
-                }}
-                    style={{ float: 'right', margin: '10px', cursor: 'pointer', paddingRight: '2rem' }}>ออกจากระบบ</a>
-            </div>
+        <div className="bg-slate-200">
             <div style={{ justifyContent: 'center', alignItems: 'center', padding: '2rem 2rem', width: '100vw' }}>
+                <div className="lg:flex lg:items-center lg:justify-between">
+                    <div className="flex-1 min-w-0">
+                        <h2 className="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">Information</h2>
+                    </div>
+                    <div className="mt-5 flex lg:mt-0 lg:ml-4">
+                        <span className="sm:ml-3">
 
-
-
-                <div className={styles.tapbar}>
-                    <p className={styles.font_top}>BLOCK TRACER</p>
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    localStorage.removeItem('user')
+                                    router.push({
+                                        pathname: 'login'
+                                    })
+                                }}
+                                className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            >
+                                Log Out
+                            </button>
+                        </span>
+                    </div>
                 </div>
-                <div style={{ padding: '20px', margin: '30px 0px 0px 0px' }} className={styles.box_info}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <div>
-                            <label>FROM : </label>
-                            <Input type='text' style={{ width: 300 } } onChange={v=> setFrom(v.target.value.toLowerCase())}/>
-                            {/* <Select className="w-full" options={srcOptions} value={from} onChange={v => setFrom(v)} style={{ width: 300 }} /> */}
-                        </div>
-                        <div>
-                            <label>TO : </label>
-                            {/* <Select className="w-full" options={destOptions} value={to} onChange={v => setTo(v)} style={{ width: 300 }} /> */}
-                            <Input type='text' style={{ width: 300 }} onChange={(v:any) => setTo(v.target.value.toLowerCase())} />
-                        </div>
-                        <div>
-                            <label>LEVELS : </label>
-                            <Input type="number" value={level} onChange={e => setLevel(e.target.value)} style={{ width: 150 }} />
-                            {/* <Input type='text' style={{ width: 300 }} /> */}
-                        </div>
-                        <div>
-                            <label>PAGES : </label>
-                            <Input type="number" value={page} onChange={e => setPage(e.target.value)} style={{ width: 150 }} />
-                        </div>
-                        <div>
-                            <Button type="primary" onClick={updateData}>Update</Button>
-                        </div>
-                        <div>
-                            <Button type="primary" onClick={handleClick} loading={loading}>
-                                TRACE
-                            </Button>
-                        </div>
+                <main>
+                    <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+                        <div className="px-4 py-6 sm:px-0">
+                            <div className="border-4 border-dashed border-slate-500 rounded-lg">
+                                <div style={{padding: '20px' }}
+                                    className="bg-slate-100">
+                                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                        <div>
+                                            <label>
+                                                From
+                                            </label>
+                                            <input
+                                                type="text"
+                                                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                                                placeholder="Thief"
+                                                onChange={(v) => { setFrom(v.target.value.toLowerCase()) }}
+                                            />
+                                        </div>
+                                        <div>
+                                            <label>
+                                                To
+                                            </label>
+                                            <input
+                                                type="text"
+                                                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                                                placeholder="Binance"
+                                                onChange={(v) => { setTo(v.target.value.toLowerCase()) }}
+                                            />
+                                        </div>
+                                        <div>
+                                            <label>Levels</label>
+                                            <input type="number"
+                                                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                                                value={level} onChange={e => setLevel(e.target.value)} style={{ width: 150 }} />
+                                            {/* <Input type='text' style={{ width: 300 }} /> */}
+                                        </div>
+                                        <div>
+                                            <label>Pages</label>
+                                            <input type="number"
+                                                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" value={page} onChange={e => setPage(e.target.value)} style={{ width: 150 }} />
+                                        </div>
+                                        <div>
+                                            <button type="button"
+                                                className="inline-flex items-center px-4 py-2 mt-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                                onClick={updateData}>Update</button>
+                                        </div>
+                                        <div>
+                                            <button
+                                                type="button"
+                                                onClick={() => { handleClick() }}
+                                                className="inline-flex items-center px-4 py-2 mt-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                            >
+                                                Trace
+                                            </button>
+                                        </div>
 
-                        {/* <div style={{ justifyContent: 'center', textAlign: 'left', padding: '0px 20px 30px 70px' }}>
-                        <Button
-                            href='/home'>
-                            Back
-                        </Button>
-                    </div> */}
-                    </div>
-                    <div>
+                                    </div>
+                                    <div>
 
-                        <div className='w-full border' style={{ minHeight: 600 }}>
-                            <div id="chartdiv" style={{ minHeight: 800 }}></div>
-                        </div>
-                    </div>
+                                        <div className='w-full border' style={{ minHeight: 600 }}>
+                                            <div id="chartdiv" style={{ minHeight: 800 }}></div>
+                                        </div>
+                                    </div>
 
-                    <Modal
-                        footer={null}
-                        visible={visible}
-                        title={`Transaction List from ${selectedNode ? selectedNode.name : ''}`}
-                        onCancel={() => setVisible(false)}
-                    >
-                        {
-                            selectedNode && selectedNode.txList.map((hash: string, index: number) => (
-                                <div key={hash}>
-                                    <span>{index + 1} : </span>
-                                    <span> Amount </span>
+                                    <Modal
+                                        footer={null}
+                                        visible={visible}
+                                        title={`Transaction List from ${selectedNode ? selectedNode.name : ''}`}
+                                        onCancel={() => setVisible(false)}
+                                    >
+                                        {
+                                            selectedNode && selectedNode.txList.map((hash: string, index: number) => (
+                                                <div key={hash}>
+                                                    <span>{index + 1} : </span>
+                                                    {/* <span> Amount </span>
                                     <span
                                         style={{ color: "red" }}>
                                         {
                                             amount.length > 0 && amount.filter(item => item['hash'] == hash)[0]['amount'] || '-'
                                         }
                                     </span>
-                                    <span> USDT , </span>
-                                    <a href={`${config.ETHERSCAN_BASE_URL}/tx/${hash}`} target="_blank">View Transaction</a>
-                                </div>
-                            ))
-                        }
-                    </Modal>
-                    <div style={{ justifyContent: 'center', textAlign: 'left', padding: '0px 20px 30px 70px' }}>
-                        <Button
-                            href='/home'>
-                            Back
-                        </Button>
-                    </div>
+                                    <span> USDT , </span> */}
+                                                    <a href={`${config.ETHERSCAN_BASE_URL}/tx/${hash}`} target="_blank">View Transaction</a>
+                                                </div>
+                                            ))
+                                        }
+                                    </Modal>
 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main >
+                <div style={{ justifyContent: 'center', textAlign: 'left', padding: '0px 20px 30px 70px' }}>
+                    <a href="/home">
+                        <button
+                            type="button"
+                            className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                        >
+                            Back
+                        </button>
+                    </a>
                 </div>
             </div>
         </div>
+
 
     )
 }
