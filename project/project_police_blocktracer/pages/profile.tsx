@@ -3,8 +3,7 @@ import axios from 'axios'
 import { useRouter } from "next/router";
 import { Row, Col, Button, Input, message } from "antd";
 import styles from '../styles/Home.module.css'
-import { useForm } from 'react-hook-form'
-import { PencilIcon } from '@heroicons/react/solid'
+import { Popover } from '@headlessui/react'
 
 export default function Profile() {
     const URL = 'http://127.0.0.1:3333'
@@ -143,32 +142,37 @@ export default function Profile() {
 
     }, [])
     return (
-        <div style={{ justifyContent: 'center', alignItems: 'center', padding: '2rem 2rem', width: '100vw'}}
-        className="bg-slate-200 max-h-full">
-            <div className="lg:flex lg:items-center lg:justify-between">
-                <div className="flex-1 min-w-0">
-                    <h2 className="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">Information</h2>
+        <div style={{ padding: '2rem 2rem'}}
+            className="bg-slate-200">
+            <Popover className="relative bg-slate-200">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6">
+                    <div className="border-b-2 border-gray-100 py-6 md:justify-start md:space-x-10">
+                        <div className="lg:flex lg:items-center lg:justify-between">
+                            <div className="flex-1 min-w-0">
+                                <h2 className="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">Information</h2>
+                            </div>
+                            <div className="mt-6 lg:mt-5 lg:ml-4 flex grid justify-items-end">
+                                <span className="sm:ml-3">
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            localStorage.removeItem('user')
+                                            Router.push({
+                                                pathname: 'login'
+                                            })
+                                        }}
+                                        className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                    >
+                                        Log Out
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div className="mt-5 flex lg:mt-0 lg:ml-4">
-                    <span className="sm:ml-3">
+            </Popover >
 
-                        <button
-                            type="button"
-                            onClick={() => {
-                                localStorage.removeItem('user')
-                                Router.push({
-                                    pathname: 'login'
-                                })
-                            }}
-                            className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                        >
-                            Log Out
-                        </button>
-                    </span>
-                </div>
-            </div>
-
-            <div style={{ justifyContent: 'center', alignItems: 'center', padding: '2rem 2rem', width: '100vw' }}>
+            <div style={{ justifyContent: 'center', alignItems: 'center' ,padding:'2rem'}}>
                 <div>
                     <main>
                         <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">

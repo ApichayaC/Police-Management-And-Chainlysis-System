@@ -12,17 +12,15 @@ import { Edge, GraphInput } from '../src/types'
 import { THEIF_ADDRESSES, BN_ADDRESSES } from '../src/common/constants'
 import axios from 'axios'
 import config from '../config'
-import { values } from 'core-js/core/array';
 
+import lineNoti from '../store/line'
 
 const BASE_URL = 'http://block.werapun.com:4005';
 const PAGE_SIZE = 5;
 
 const Block_Tracer = () => {
 
-    //const [from, setFrom] = useState(THEIF_ADDRESSES.ETH[0].toLowerCase());
     const [from, setFrom] = useState('');
-    //const [to, setTo] = useState(BN_ADDRESSES[0].toLowerCase());
     const [to, setTo] = useState('');
     const [level, setLevel] = useState('4');
     const [page, setPage] = useState('1');
@@ -35,9 +33,9 @@ const Block_Tracer = () => {
 
     const router = useRouter();
 
+
     const getAccountRelations = async (from: string, to: string, level = 1, limit = 20, offset = 0) => {
         const url = `${BASE_URL}/graph/trace?from=${from}&to=${to}&level=${level}&limit=${limit}&offset=${offset}`;
-        // const url = `${BASE_URL}/graph/trace?from=0x4d98fb4964c532e80a43ba2089146ce4dc0ecbc2&to=0x3f5ce5fbfe3e9af3971dd833d26ba9b5c936f0be&level=5&limit=50&offset=100`;
         console.log(url);
         console.log('from', from);
         const res = await axios.get(url).then(res => res.data as GraphInput);
@@ -234,6 +232,18 @@ const Block_Tracer = () => {
 
     //button tracer
     const handleClick = async () => {
+
+        // lineNoti('test')
+        try {
+            const request = await axios.post("/api/notify", {
+                message: `Transaction Thief : ${from}
+                Transaction Binance :${to}`
+            })
+        } catch (e) {
+
+        }
+        console.log('line')
+
         await loadRelations();
     }
     //button update
@@ -260,9 +270,6 @@ const Block_Tracer = () => {
 
     useAppStore(state => state.addressList);
     const getLabelledAddress = useAppStore(state => state.getLabelledAddress);
-
-    const srcOptions = THEIF_ADDRESSES.ETH.map(addr => ({ label: getLabelledAddress(addr, { showAddress: true }), value: addr }));
-    const destOptions = BN_ADDRESSES.map(addr => ({ label: getLabelledAddress(addr, { showAddress: true }), value: addr }));
 
     return (
         <div className="bg-slate-200">
@@ -293,7 +300,7 @@ const Block_Tracer = () => {
                     <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
                         <div className="px-4 py-6 sm:px-0">
                             <div className="border-4 border-dashed border-slate-500 rounded-lg">
-                                <div style={{padding: '20px' }}
+                                <div style={{ padding: '20px' }}
                                     className="bg-slate-100">
                                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                                         <div>
