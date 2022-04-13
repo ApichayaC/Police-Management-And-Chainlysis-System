@@ -102,8 +102,8 @@ export default function List() {
     }, [loginCheck, checkRole])
 
     return (
-        <div style={{ padding: '2rem 2rem'}}
-            className="bg-slate-200">
+        <div
+            className="bg-slate-200 h-screen px-8">
             <Popover className="relative bg-slate-200">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6">
                     <div className="border-b-2 border-gray-100 py-6 md:justify-start md:space-x-10">
@@ -227,7 +227,7 @@ export default function List() {
                     </div>
                 </div>
             </div>
-            <div>
+            <div className="bg-slate-200">
                 <a href="/home">
                     <button
                         type="button"
