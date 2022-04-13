@@ -154,7 +154,6 @@ const Block_Tracer = () => {
                 return prev;
             }, nodeMaps);
             console.log('nodemap', nodeMaps)
-
             const fromLabel = getLabelledAddress(from);
             const toLabel = getLabelledAddress(to);
 
@@ -174,6 +173,7 @@ const Block_Tracer = () => {
                     }
                     //console.log('hash',hashCheck)
                 })
+                console.log("hashcheck", hashCheck)
                 // const amounts: any = []
                 // hashCheck.map((value: any) => {
                 //     amount.filter((hash) => {
@@ -229,19 +229,40 @@ const Block_Tracer = () => {
             }
         }
     }
+    const date = new Date();
 
-    //button tracer
-    const handleClick = async () => {
+    const notify = async () => {
+        console.log('relation', chartRef.current.data)
 
-        // lineNoti('test')
         try {
-            const request = await axios.post("/api/notify", {
-                message: `Transaction Thief : ${from}
-                Transaction Binance :${to}`
-            })
+            if (chartRef.current.data.length > 0) {
+                for (let i = 0; i < 4; i++) {
+                    if (i < chartRef.current.data.length && chartRef.current.data[i].linkWith.length>0) {
+                        const request = await axios.post("/api/notify", {
+                            message: `Date : ${date.toLocaleString()}
+                            Transaction From : ${chartRef.current.data[i].name}
+                            exchange to
+                            Transaction To : ${chartRef.current.data[i].linkWith.join(",")}`
+                        })
+                    }
+                    if(i==3){
+                        const request = await axios.post("/api/notify", {
+                            message: `See more transactions on your website`
+                        })
+                    }
+                }
+                
+            }
+
         } catch (e) {
 
         }
+    }
+
+    //button tracer
+    const handleClick = async () => {
+        // lineNoti('test')
+        notify()
         console.log('line')
 
         await loadRelations();
