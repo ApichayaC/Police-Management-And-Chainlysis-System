@@ -44,10 +44,10 @@ export default function Login() {
         console.log('Failed:', errorInfo);
     };
     return (
-        <div className="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-6 bg-slate-200"  style={{width:"100vw" , height:"100vh"}}>
-            <div className="max-w-md w-full space-y-8">
+        <div className="h-screen w-full flex items-center justify-center py-8 px-4  bg-slate-200 font-mono" >
+            <div className="max-w-md w-full">
                 <div>
-                    <h2 className="text-center text-3xl font-extrabold text-gray-900">Sign in to your account</h2>
+                    <h2 className="text-center text-2xl font-extrabold rounded-full bg-sky-700 py-2 text-sky-200 shadow">Sign in to your account</h2>
                 </div>
                 <div
                     className="mt-8 space-y-6"
@@ -85,11 +85,11 @@ export default function Login() {
                             />
                         </div>
                     </div>
-                    <div>
+                    <div className="flex items-center justify-center">
                         <button
                             type="submit"
                             onClick={onFinish}
-                            className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            className="group relative w-2/5 flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                         >
                             <span className="absolute left-0 inset-y-0 flex items-center pl-3">
                                 <LockClosedIcon className="h-5 w-5 text-indigo-500 group-hover:text-indigo-400" aria-hidden="true" />

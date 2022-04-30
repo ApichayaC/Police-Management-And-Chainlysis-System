@@ -36,10 +36,14 @@ const Block_Tracer = () => {
 
     const getAccountRelations = async (from: string, to: string, level = 1, limit = 20, offset = 0) => {
         const url = `${BASE_URL}/graph/trace?from=${from}&to=${to}&level=${level}&limit=${limit}&offset=${offset}`;
+        //const url = `http://localhost:4000/graph/trace?from=${from}&to=${to}&level=${level}&limit=${limit}&offset=${offset}`;
+        //const url2 = `http://localhost:4000/graph/trace?from=${from}&to=${to}&level=${level}&limit=${limit}&offset=${offset}`;
         console.log(url);
         console.log('from', from);
         const res = await axios.get(url).then(res => res.data as GraphInput);
+        //const res2 = await axios.get(url2).then(res => res.data as GraphInput);
         console.log('res', res);
+        //console.log('res2', res2);
         // const promise: any = []
         // res.edges.map((value) => {
         //     promise.push(getAmount(value))
@@ -231,39 +235,39 @@ const Block_Tracer = () => {
     }
     const date = new Date();
 
-    const notify = async () => {
-        console.log('relation', chartRef.current.data)
+    // const notify = async () => {
+    //     console.log('relation', chartRef.current.data)
 
-        try {
-            if (chartRef.current.data.length > 0) {
-                for (let i = 0; i < 4; i++) {
-                    if (i < chartRef.current.data.length && chartRef.current.data[i].linkWith.length>0) {
-                        const request = await axios.post("/api/notify", {
-                            message: `Date : ${date.toLocaleString()}
-                            Transaction From : ${chartRef.current.data[i].name}
-                            exchange to
-                            Transaction To : ${chartRef.current.data[i].linkWith.join(",")}`
-                        })
-                    }
-                    if(i==3){
-                        const request = await axios.post("/api/notify", {
-                            message: `See more transactions on your website`
-                        })
-                    }
-                }
-                
-            }
+    //     try {
+    //         if (chartRef.current.data.length > 0) {
+    //             for (let i = 0; i < 4; i++) {
+    //                 if (i < chartRef.current.data.length && chartRef.current.data[i].linkWith.length > 0) {
+    //                     const request = await axios.post("/api/notify", {
+    //                         message: `Date : ${date.toLocaleString()}
+    //                         Transaction From : ${chartRef.current.data[i].name}
+    //                         exchange to
+    //                         Transaction To : ${chartRef.current.data[i].linkWith.join(",")}`
+    //                     })
+    //                 }
+    //                 if (i == 3) {
+    //                     const request = await axios.post("/api/notify", {
+    //                         message: `See more transactions on your website`
+    //                     })
+    //                 }
+    //             }
 
-        } catch (e) {
+    //         }
 
-        }
-    }
+    //     } catch (e) {
+
+    //     }
+    // }
 
     //button tracer
     const handleClick = async () => {
         // lineNoti('test')
-        notify()
-        console.log('line')
+        // notify()
+        // console.log('line')
 
         await loadRelations();
     }
@@ -294,89 +298,86 @@ const Block_Tracer = () => {
 
     return (
         <div className="bg-slate-200">
-            <div style={{ justifyContent: 'center', alignItems: 'center', padding: '2rem 2rem', width: '100vw' }}>
-                <div className="lg:flex lg:items-center lg:justify-between">
-                    <div className="flex-1 min-w-0">
-                        <h2 className="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">Information</h2>
+            <div style={{ justifyContent: 'center', alignItems: 'center' }}>
+                <div className="flex items-center justify-between bg-sky-900 rounded-b-lg w-full">
+                    <div className="flex-1 min-w-0 ">
+                        <h2 className="ml-8 text-8xl font-mono leading-7 text-sky-100 sm:text-3xl sm:truncate">Block Tracer</h2>
                     </div>
-                    <div className="mt-5 flex lg:mt-0 lg:ml-4">
-                        <span className="sm:ml-3">
-
-                            <button
-                                type="button"
-                                onClick={() => {
-                                    localStorage.removeItem('user')
-                                    router.push({
-                                        pathname: 'login'
-                                    })
-                                }}
-                                className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                            >
-                                Log Out
-                            </button>
-                        </span>
+                    <div className="lg:my-4 lg:mr-8 flex grid justify-items-end">
+                        <button
+                            type="button"
+                            onClick={() => {
+                                localStorage.removeItem('user')
+                                router.push({
+                                    pathname: 'login'
+                                })
+                            }}
+                            className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-sky-900 bg-slate-200 hover:bg-slate-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                        >
+                            Log Out
+                        </button>
                     </div>
                 </div>
                 <main>
-                    <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-                        <div className="px-4 py-6 sm:px-0">
-                            <div className="border-4 border-dashed border-slate-500 rounded-lg">
+                    <div className="max-w-7xl mx-auto py-6 ">
+                        <div className='px-4 py-6'>
+                            <div className="border-4 border-sky-800 rounded-2xl">
                                 <div style={{ padding: '20px' }}
-                                    className="bg-slate-100">
+                                    className="bg-slate-100 rounded-2xl">
                                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                                         <div>
-                                            <label>
+                                            <label className='flex text-lg text-sky-700 font-mono'>
                                                 From
                                             </label>
                                             <input
                                                 type="text"
-                                                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                                                className="rounded-lg relative block w-full px-3 py-2 border border-sky-600 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                                                 placeholder="Thief"
                                                 onChange={(v) => { setFrom(v.target.value.toLowerCase()) }}
                                             />
                                         </div>
                                         <div>
-                                            <label>
+                                            <label className='flex text-lg text-sky-700 font-mono'>
                                                 To
                                             </label>
                                             <input
                                                 type="text"
-                                                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                                                className="appearance-none rounded-lg relative block w-full px-3 py-2 border border-sky-600 placeholder-gray-500 text-gray-900  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                                                 placeholder="Binance"
                                                 onChange={(v) => { setTo(v.target.value.toLowerCase()) }}
                                             />
                                         </div>
                                         <div>
-                                            <label>Levels</label>
+                                            <label className='flex text-lg text-sky-700 font-mono'>Levels</label>
                                             <input type="number"
-                                                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                                                className="appearance-none rounded-lg relative block w-full px-3 py-2 border border-sky-600 placeholder-gray-500 text-gray-900  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                                                 value={level} onChange={e => setLevel(e.target.value)} style={{ width: 150 }} />
                                             {/* <Input type='text' style={{ width: 300 }} /> */}
                                         </div>
                                         <div>
-                                            <label>Pages</label>
+                                            <label className='flex text-lg text-sky-700 font-mono'>Pages</label>
                                             <input type="number"
-                                                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" value={page} onChange={e => setPage(e.target.value)} style={{ width: 150 }} />
+                                                className="appearance-none rounded-lg relative block w-full px-3 py-2 border border-sky-600 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" value={page} onChange={e => setPage(e.target.value)} style={{ width: 150 }} />
                                         </div>
                                         <div>
                                             <button type="button"
-                                                className="inline-flex items-center px-4 py-2 mt-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                                className="flex items-center px-4 py-2 mt-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-sky-200 bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                                 onClick={updateData}>Update</button>
                                         </div>
                                         <div>
                                             <button
                                                 type="button"
                                                 onClick={() => { handleClick() }}
-                                                className="inline-flex items-center px-4 py-2 mt-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                                className="flex items-center px-4 py-2 mt-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-sky-200 bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                             >
                                                 Trace
                                             </button>
                                         </div>
 
                                     </div>
-                                    <div>
+                                    <div className='mt-2'>
 
-                                        <div className='w-full border' style={{ minHeight: 600 }}>
+                                        <div className='w-full border-2 border-sky-600 rounded-lg' style={{ minHeight: 600 }}>
                                             <div id="chartdiv" style={{ minHeight: 800 }}></div>
                                         </div>
                                     </div>
@@ -414,7 +415,7 @@ const Block_Tracer = () => {
                     <a href="/home">
                         <button
                             type="button"
-                            className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-sky-200 bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                         >
                             Back
                         </button>

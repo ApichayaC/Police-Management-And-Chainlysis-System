@@ -12,6 +12,7 @@ export default async (req, res) => {
                 'Authorization': `Bearer `+'xnCdNWTuFUPOxPZ2VtDjaNoouKrb0MP95h45mgvEQOi',
             }
         })
+        console.log('param',params)
         console.log(request.data);
     } catch (e) {
         console.log(e);

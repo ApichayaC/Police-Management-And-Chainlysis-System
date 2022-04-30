@@ -6,6 +6,7 @@ import { EtherscanService } from 'src/etherscan/etherscan.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { EtherscanTransaction, TransactionReponse } from 'src/types';
 import { delay } from 'src/utils';
+import axios from 'axios';
 
 const START_BLOCK = 10864622;
 const BLOCKS_PER_DAY = 6400;
@@ -53,6 +54,16 @@ export class FetchingService {
                     pendings.push(...unfinished.map(sender => ({ sender } as DataSnapshot)));
 
                     await delay(500);
+                    // const params = new URLSearchParams();
+                    // const date = new Date();
+                    // params.append('message', `Date : ${date.toLocaleString()} Transaction From : ${pendingFetch.sender} `)
+                    // const request = await axios.post("https://notify-api.line.me/api/notify", params, {
+                    //     headers: {
+                    //         'Content-Type': 'application/x-www-form-urlencoded',
+                    //         'Authorization': `Bearer ` + 'xnCdNWTuFUPOxPZ2VtDjaNoouKrb0MP95h45mgvEQOi',
+                    //     }
+                    // })
+                    // console.log('req',request)
                 }
             } catch (e) {
                 console.log(e);
@@ -60,6 +71,7 @@ export class FetchingService {
         }
 
         console.log(`\n=== FETCHING DATA SUCCESS ===`)
+
 
         return { startBlock: START_BLOCK, toBlock: END_BLOCK };
     }
@@ -78,7 +90,7 @@ export class FetchingService {
                 ]
             }, select: { hash: true }
         });
-        
+
         const localTxHashes = localTxList.map(tx => tx.hash);
         const pulledTxs: EtherscanTransaction[] = [];
         let res: TransactionReponse = null;
@@ -139,6 +151,19 @@ export class FetchingService {
         await this.prisma.$transaction([insertTxs, updateSnapshot, insertSenders])
 
         console.log('Succeed')
+        if (newSenders.length > 0) {
+            console.log('notify')
+            const params = new URLSearchParams();
+            const date = new Date();
+            params.append('message', `Date : ${date.toLocaleString()} Transaction new exchange : ${newSenders[0]} StartBlock : ${startBlock} EndBlock : ${endBlock}`)
+            const request = await axios.post("https://notify-api.line.me/api/notify", params, {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Authorization': `Bearer ` + 'xnCdNWTuFUPOxPZ2VtDjaNoouKrb0MP95h45mgvEQOi',
+                }
+            })
+
+        }
 
         return { senders: newSenders, txCount: newTxList.length, isCompleted, page }
     }

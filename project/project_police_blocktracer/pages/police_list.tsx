@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import styles from '../styles/Home.module.css'
 import axios from 'axios'
-import { Button, Space} from "antd";
-import { Popover } from '@headlessui/react'
+import { Button, Space } from "antd";
 
 export default function List() {
     const URL = "http://127.0.0.1:3333";
@@ -52,46 +50,6 @@ export default function List() {
         setName(person || []);
     }
 
-    const people = [
-        {
-            title: 'ลำดับที่',
-            dataIndex: 'index',
-            key: 'index',
-        },
-        {
-            title: 'ยศ',
-            dataIndex: 'rank',
-            key: 'rank',
-        },
-        {
-            title: 'ชื่อ',
-            dataIndex: 'name',
-            key: 'name',
-        },
-        {
-            title: 'นามสกุล',
-            dataIndex: 'surname',
-            key: 'surname',
-        },
-        {
-            title: 'แสดงข้อมูล',
-            key: 'action',
-            render: (text: string[], record: any) => {
-                return (
-                    <Space size="middle" key={record.id || ''} >
-                        <Button onClick={() => {
-                            router.push({
-                                pathname: 'profile',
-                                query: { id: record.id || '' }
-                            })
-                        }
-                        }>Click</Button>
-                    </Space>
-                )
-            },
-        },
-    ];
-
     const [loginCheck, setLoginCheck] = useState('');
     const [checkRole, setCheckRole] = useState('');
     useEffect(() => {
@@ -102,58 +60,50 @@ export default function List() {
     }, [loginCheck, checkRole])
 
     return (
-        <div
-            className="bg-slate-200 h-screen px-8">
-            <Popover className="relative bg-slate-200">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6">
-                    <div className="border-b-2 border-gray-100 py-6 md:justify-start md:space-x-10">
-                        <div className="lg:flex lg:items-center lg:justify-between">
-                            <div className="flex-1 min-w-0">
-                                <h2 className="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">Information</h2>
-                            </div>
-                            <div className="mt-6 lg:mt-5 lg:ml-4 flex grid justify-items-end">
-                                <span className="sm:ml-3">
-                                    <button
-                                        type="button"
-                                        onClick={() => {
-                                            localStorage.removeItem('user')
-                                            router.push({
-                                                pathname: 'login'
-                                            })
-                                        }}
-                                        className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                    >
-                                        Log Out
-                                    </button>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
+        <div className="bg-slate-200 h-full font-mono text-8xl">
+            <div className="flex items-center justify-between bg-sky-900 rounded-b-lg w-full">
+                <div className="flex-1 min-w-0 ">
+                    <h2 className="ml-8 text-8xl font-mono leading-7 text-sky-100 sm:text-3xl sm:truncate">Information</h2>
                 </div>
-            </Popover>
-
-            <div className="mt-4">
-                <label htmlFor="price" className="block text-2xl font-medium text-gray-700 grid justify-items-center">
+                <div className="lg:my-4 lg:mr-8 flex grid justify-items-end">
+                    <button
+                        type="button"
+                        onClick={() => {
+                            localStorage.removeItem('user')
+                            router.push({
+                                pathname: 'login'
+                            })
+                        }}
+                        className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-sky-900 bg-slate-200 hover:bg-slate-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    >
+                        Log Out
+                    </button>
+                </div>
+            </div>
+            <div className="mt-4 px-8 ">
+                <label className="block text-5xl text-sky-700 grid justify-items-center ">
                     ค้นหารายชื่อ
                 </label>
-                <div className="mt-1 relative rounded-md shadow-sm grid justify-items-center mt-2">
+
+                <div className="mt-1 relative rounded-md grid justify-items-center mt-2">
                     <input
                         type="text"
                         onChange={e => { setSearch(e.target.value.trim()); searchName() }}
-                        className="focus:ring-indigo-500 focus:border-indigo-500 block w-5/12 pl-7 pr-12 sm:text-sm border-gray-300 rounded-md"
+                        className="focus:ring-indigo-500 focus:border-indigo-500 block w-5/12 pl-7 pr-12 sm:text-sm border-gray-300 rounded-lg"
                     />
+
                     <button
                         type="button"
                         onClick={searchName}
-                        className="px-4 py-2 border border-transparent my-4 rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 "
+                        className="px-4 py-2 border border-transparent my-4 rounded-lg shadow-sm text-sm font-medium text-sky-200 bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 "
                     >
                         Search
                     </button>
                 </div>
             </div>
-            <div className="flex flex-col">
-                <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                    <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+            <div className="flex flex-col px-8 ">
+                <div className="-mt-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                    <div className="pt-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
                         <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
                             <table
                                 className="min-w-full divide-y divide-gray-200">
@@ -161,31 +111,31 @@ export default function List() {
                                     <tr>
                                         <th
                                             scope="col"
-                                            className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                            className="px-6 py-3 text-left text-xl font-medium text-sky-900 uppercase tracking-wider"
                                         >
                                             ลำดับที่
                                         </th>
                                         <th
                                             scope="col"
-                                            className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                            className="px-6 py-3 text-left text-xl font-medium text-sky-900 uppercase tracking-wider"
                                         >
                                             ยศ
                                         </th>
                                         <th
                                             scope="col"
-                                            className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                            className="px-6 py-3 text-left text-xl font-medium text-sky-900 uppercase tracking-wider"
                                         >
                                             ชื่อ
                                         </th>
                                         <th
                                             scope="col"
-                                            className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                            className="px-6 py-3 text-left text-xl font-medium text-sky-900 uppercase tracking-wider"
                                         >
                                             นามสกุล
                                         </th>
                                         <th
                                             scope="col"
-                                            className="relative px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            className="px-6 py-3 text-left text-xl font-medium text-sky-900 uppercase tracking-wider">
                                             แสดงข้อมูล
                                         </th>
                                     </tr>
@@ -196,28 +146,30 @@ export default function List() {
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <div className="flex items-center">
                                                     <div className="ml-4">
-                                                        <div className="text-sm text-gray-500">{person.index}</div>
+                                                        <div className="text-lg text-gray-500">{person.index}</div>
                                                     </div>
                                                 </div>
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap">
-                                                <div className="text-sm text-gray-900">{person.rank}</div>
+                                                <div className="text-lg text-sky-900">{person.rank}</div>
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap">
-                                                <div className="text-sm text-gray-900">{person.name}</div>
+                                                <div className="text-lg text-sky-900">{person.name}</div>
                                             </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{person.surname}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                                <a className="text-indigo-600 hover:text-indigo-900"
-                                                    onClick={() => {
-                                                        router.push({
-                                                            pathname: 'profile',
-                                                            query: { id: person.id || '' }
-                                                        })
-                                                    }}
-                                                    style={{ cursor: 'pointer' }}>
-                                                    Show
-                                                </a>
+                                            <td className="px-6 py-4 whitespace-nowrap text-lg text-sky-900">{person.surname}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-lg font-medium">
+                                                <div className="flex items-center ml-4">
+                                                    <a className="text-indigo-600 hover:text-indigo-900"
+                                                        onClick={() => {
+                                                            router.push({
+                                                                pathname: 'profile',
+                                                                query: { id: person.id || '' }
+                                                            })
+                                                        }}
+                                                        style={{ cursor: 'pointer' }}>
+                                                        Show
+                                                    </a>
+                                                </div>
                                             </td>
                                         </tr>
                                     ))}
@@ -227,14 +179,15 @@ export default function List() {
                     </div>
                 </div>
             </div>
-            <div className="bg-slate-200">
+            <div className="bg-slate-200 ml-8 my-2">
                 <a href="/home">
+                    {checkRole == "Admin" ?
                     <button
                         type="button"
-                        className="inline-flex items-center mt-4 px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                        className="flex items-center mt-4 px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-sky-200 bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                     >
                         Back
-                    </button>
+                    </button> : ''}
                 </a>
             </div>
         </div>
